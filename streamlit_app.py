@@ -9,8 +9,8 @@ def initialize_bedrock_client():
     try:
         client = boto3.client(
             'bedrock-agent-runtime',
-            st.write("aws_access_key_id", st.secrets["aws_access_key_id"]),
-            st.write("aws_secret_access_key", st.secrets["aws_secret_access_key"]),
+            aws_access_key_id = st.secrets["aws_access_key_id"],
+            aws_secret_access_key = st.secrets["aws_secret_access_key"],
             region_name='us-east-1'
         )
         return client
