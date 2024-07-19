@@ -11,9 +11,9 @@ def initialize_bedrock_client():
     try:
         client = boto3.client(
             'bedrock-agent-runtime',
-            aws_access_key_id = os.getenv('aws_access_key_id'),
-            aws_secret_access_key = os.getenv('aws_secret_access_key'),
-            region_name = os.getenv('region_name'),
+            aws_access_key_id = st.secrets["aws_access_key_id"],
+            aws_secret_access_key = st.secrets["aws_secret_access_key"],
+            region_name='us-east-1'
         )
         return client
     except NoCredentialsError:
