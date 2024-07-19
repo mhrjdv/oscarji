@@ -4,7 +4,7 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError, Cli
 import uuid
 import os
 import random
-
+import time
 
 # Initialize the AWS Bedrock Runtime client
 def initialize_bedrock_client():
@@ -56,7 +56,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Accept user input
-if prompt := st.chat_input("You:"): 
+if prompt := st.chat_input("You:"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
     # Display user message in chat message container
@@ -66,14 +66,24 @@ if prompt := st.chat_input("You:"):
     # Initialize Bedrock client and get response
     client = initialize_bedrock_client()
     if client:
-        session_id = str(random.randint(100000, 999999))
+        session_id = str(random.randint(100000, 999999))  # Generate a random 6-digit session ID
         agent_id = 'F9JRBHFNPU'
         agent_alias_id = 'KS59ZQYFEJ'
-        response = invoke_bedrock_agent(client, agent_id, agent_alias_id, prompt, session_id)
+
+        response_container = st.empty()  # Create an empty container for streaming response
+        partial_response = ""  # Variable to hold partial response
+        
+        with st.spinner("Waiting for response..."):  # Add spinner here
+            response = invoke_bedrock_agent(client, agent_id, agent_alias_id, prompt, session_id)
 
         if response:
-            # Display assistant response in chat message container
-            with st.chat_message("assistant"):
-                st.markdown(response)
+            # Simulate streaming by progressively displaying the response
+            chunk_size = 2  # Smaller chunk size for smoother streaming
+            delay = 0.02  # Shorter delay for smoother streaming
+            for i in range(0, len(response), chunk_size):
+                partial_response = response[:i+chunk_size]
+                response_container.markdown(partial_response)
+                time.sleep(delay)  # Simulate delay for streaming effect
+
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": response})
