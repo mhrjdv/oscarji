@@ -3,15 +3,17 @@ import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
 import uuid
 import os
+import random
+
 
 # Initialize the AWS Bedrock Runtime client
 def initialize_bedrock_client():
     try:
         client = boto3.client(
             'bedrock-agent-runtime',
-            aws_access_key_id = st.secrets["aws_access_key_id"],
-            aws_secret_access_key = st.secrets["aws_secret_access_key"],
-            region_name='us-east-1',
+            aws_access_key_id = os.getenv('aws_access_key_id'),
+            aws_secret_access_key = os.getenv('aws_secret_access_key'),
+            region_name = os.getenv('region_name'),
         )
         return client
     except NoCredentialsError:
@@ -54,7 +56,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Accept user input
-if prompt := st.chat_input("You:"):
+if prompt := st.chat_input("You:"): 
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
     # Display user message in chat message container
@@ -64,9 +66,9 @@ if prompt := st.chat_input("You:"):
     # Initialize Bedrock client and get response
     client = initialize_bedrock_client()
     if client:
-        session_id = "10"
-        agent_id = "F9JRBHFNPU"
-        agent_alias_id = "KS59ZQYFEJ"
+        session_id = str(random.randint(100000, 999999))
+        agent_id = 'F9JRBHFNPU'
+        agent_alias_id = 'KS59ZQYFEJ'
         response = invoke_bedrock_agent(client, agent_id, agent_alias_id, prompt, session_id)
 
         if response:
