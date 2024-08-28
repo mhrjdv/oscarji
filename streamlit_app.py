@@ -67,8 +67,8 @@ if prompt := st.chat_input("You:"):
     client = initialize_bedrock_client()
     if client:
         session_id = str(random.randint(100000, 999999))  # Generate a random 6-digit session ID
-        agent_id = 'F9JRBHFNPU'
-        agent_alias_id = 'KS59ZQYFEJ'
+        agent_id = 'JLOADNTHHV'
+        agent_alias_id = 'QN5XHU3UCC'
 
         response_container = st.empty()  # Create an empty container for streaming response
         partial_response = ""  # Variable to hold partial response
